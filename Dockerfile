@@ -3,7 +3,7 @@
 ####################
 # Image Base
 FROM centos:7 AS builder
-
+ENV version 4.0.4
 # Git install
 RUN yum install -y git \
     # Python 3.6 repository and packages
@@ -30,7 +30,7 @@ RUN git clone https://github.com/crate/crate.git
 WORKDIR /tmp/crate
 RUN git submodule update --init \
     #### checkout version
-    && git checkout 4.0.10 \
+    && git checkout $version \
     && ./gradlew clean communityEditionDistTar \
     # Copy Tar distribution file
     && cp /tmp/crate/app/build/distributions/crate-ce-*.tar.gz /tmp/crate-ce.tar.gz
@@ -99,7 +99,7 @@ LABEL maintainer="implus.co <technology@implustech.com>" \
     org.label-schema.url="https://crate.io/products/cratedb/" \
     org.label-schema.vcs-url="https://github.com/implustech/crate-ce" \
     org.label-schema.vendor="Crate.io" \
-    org.label-schema.version="4.0.10"
+    org.label-schema.version="$version"
 
 COPY docker-entrypoint.sh /
 
