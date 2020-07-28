@@ -36,7 +36,7 @@ RUN git submodule update --init \
     && cp /tmp/crate/app/build/distributions/crate-ce-*.tar.gz /tmp/crate-ce.tar.gz
 
 WORKDIR /tmp
-RUN tar xzf crate-ce.tar.gz
+RUN tar xzf crate-ce.tar.gz && rm -rf crate-ce.tar.gz
 
 
 ####################
@@ -81,6 +81,8 @@ WORKDIR /data
 # Run CrateDB-CE
 USER crate
 COPY --from=builder --chown=crate:crate /tmp/crate-ce* /crate/
+COPY --chown=1000:0 config/crate.yml /crate/config/crate.yml
+COPY --chown=1000:0 config/log4j2.properties /crate/config/log4j2.properties
 ENV PATH=$PATH:/crate/bin
 
 # Default heap size for Docker, can be overwritten by args
